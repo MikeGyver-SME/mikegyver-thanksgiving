@@ -1,4 +1,4 @@
-# MG Holiday Countdown v1.0.7
+# MG Holiday Countdown v1.0.8
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,24 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.0.8 (Halloween joins the square set)
+
+Mike supplied the matching square Halloween image (1206x1206,
+kids in costume, ghost, wolf, pumpkins, "MikeGyver Studio" baked in
+at the bottom), and asked for it to be the Halloween version. It
+gets the exact same treatment as Thanksgiving/Christmas in v1.0.7:
+Small is the square direct (768x768, no blur bars, no crop),
+Medium (1024x512) and the app portrait (1152x2048) are blurred-fit
+versions of the same square, and `bakedCredit` is now true for all
+three holidays, so no overlay credit is ever duplicated. The old
+Halloween portrait (house only, no kids, no baked credit) is
+retired. Verified with a rendered Oct 28 Halloween small-tile
+mockup before shipping. All other v1.0.7 rules carry over: smaller
+overlay (days 20, until 13, date 10pt small), date lifted above the
+baked credit (bottom padding 30 small / 32 medium).
+
+Version/build bumped: v1.0.8, build 9.
 
 ## What changed in v1.0.7 (Mike's own square images, smaller overlay)
 
@@ -261,8 +279,8 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.7.zip`
-   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.7`.
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.8.zip`
+   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.8`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
 5. Actions tab → run the "Thanksgiving Countdown - Signed TestFlight"
@@ -300,6 +318,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.7, `CURRENT_PROJECT_VERSION` 8 in
+`MARKETING_VERSION` 1.0.8, `CURRENT_PROJECT_VERSION` 9 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.

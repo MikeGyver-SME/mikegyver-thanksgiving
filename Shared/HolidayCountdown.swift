@@ -75,10 +75,10 @@ public enum HolidayCountdown {
         let year = calendar.component(.year, from: day)
         let candidates = [
             Holiday(name: "HALLOWEEN", shortName: "Halloween",
-                    date: halloween(year: year), backgroundImage: "HalloweenBG",
+                    date: halloween(year: year), backgroundImage: "HalloweenBGPortrait",
                     smallBackgroundImage: "HalloweenBGSmall",
                     mediumBackgroundImage: "HalloweenBGMedium",
-                    bakedCredit: false),
+                    bakedCredit: true),
             Holiday(name: "THANKSGIVING", shortName: "Thanksgiving",
                     date: thanksgiving(year: year), backgroundImage: "ThanksgivingBGPortrait",
                     smallBackgroundImage: "ThanksgivingBGSmall",
@@ -95,10 +95,10 @@ public enum HolidayCountdown {
             if days >= 0 { return (holiday, days) }
         }
         let next = Holiday(name: "HALLOWEEN", shortName: "Halloween",
-                           date: halloween(year: year + 1), backgroundImage: "HalloweenBG",
+                           date: halloween(year: year + 1), backgroundImage: "HalloweenBGPortrait",
                            smallBackgroundImage: "HalloweenBGSmall",
                            mediumBackgroundImage: "HalloweenBGMedium",
-                           bakedCredit: false)
+                           bakedCredit: true)
         let days = calendar.dateComponents([.day], from: day, to: next.date).day ?? 0
         return (next, days)
     }
