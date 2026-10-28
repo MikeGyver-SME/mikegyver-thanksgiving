@@ -45,27 +45,37 @@ struct CountdownWidgetView: View {
     var entry: CountdownEntry
 
     var body: some View {
-        // The photo is content (in the ZStack), not the container
-        // background, so CarPlay/StandBy background handling does not
-        // strip it. The black containerBackground underneath is only
-        // a fallback if the photo ever fails to load.
-        ZStack {
-            Image(entry.holiday.widgetBackgroundImage)
-                .resizable()
-                .scaledToFill()
-            LinearGradient(
-                colors: [.black.opacity(0.45), .black.opacity(0.0), .black.opacity(0.55)],
-                startPoint: .top, endPoint: .bottom
-            )
+        // v1.0.4 fix for the Oct 28 CarPlay + phone photos: in v1.0.1
+        // the portrait photo lived in a ZStack with the text, and on
+        // both surfaces the text was centred in a view taller than
+        // the tile, so the top (days) and bottom (date, credit) were
+        // cropped equally — "UNTIL HALLOWEEN" survived in the middle,
+        // "3 DAYS" and "WED 10-28-2026" did not. The photo must NOT
+        // drive the content size. It now lives in containerBackground,
+        // which the system sizes to the tile, and the text VStack is
+        // sized to the tile on its own (frame maxWidth/maxHeight).
+        // containerBackgroundRemovable is explicitly false, so
+        // CarPlay/StandBy do not strip the photo.
+        Group {
             if family == .systemSmall {
                 smallView
             } else {
                 mediumView
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .containerBackground(for: .widget) {
-            Color.black
+            ZStack {
+                Image(entry.holiday.widgetBackgroundImage)
+                    .resizable()
+                    .scaledToFill()
+                LinearGradient(
+                    colors: [.black.opacity(0.45), .black.opacity(0.0), .black.opacity(0.55)],
+                    startPoint: .top, endPoint: .bottom
+                )
+            }
         }
+        .containerBackgroundRemovable(false)
         // On the iPhone, tapping the widget opens the app (via the
         // thanksgivingcountdown:// scheme registered in the app's
         // Info.plist). In CarPlay a tap cannot launch the app unless
@@ -75,39 +85,38 @@ struct CountdownWidgetView: View {
     }
 
     /// Small = the Home Screen small tile AND the CarPlay tile.
-    /// CarPlay is the only widget surface in the car (systemSmall
-    /// only, iOS 26+), and its tile can render smaller than the Home
-    /// Screen one, so this layout is deliberately spare: one line per
-    /// fact, every line capped at one line with a scale factor so it
-    /// shrinks instead of wrapping or clipping. v1.0.0 used the
-    /// medium layout for both sizes, and "UNTIL THANKSGIVING" at
-    /// 18pt is wider than a small tile once padding is subtracted.
+    /// Height budget, v1.0.4: days 26 + until-name 15 + date 12 +
+    /// credit 10 + padding 16 = ~79pt, well under a small tile even
+    /// after CarPlay's content margins. v1.0.1 used three lines for
+    /// the countdown (days / UNTIL / name) plus the same date and
+    /// credit; this version collapses UNTIL + name to one line,
+    /// shrinks every font, and drops padding 10 -> 8, so the date
+    /// cannot be pushed off the bottom again. Every line is still
+    /// lineLimit(1) + minimumScaleFactor, so a long name shrinks
+    /// instead of wrapping.
     private var smallView: some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 0) {
             if entry.daysUntil == 0 {
                 Text("HAPPY")
-                    .font(.system(size: 30, weight: .black, design: .rounded))
+                    .font(.system(size: 26, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text(entry.holiday.name)
-                    .font(.system(size: 17, weight: .black, design: .rounded))
+                    .font(.system(size: 16, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             } else {
                 Text("\(entry.daysUntil) DAYS")
-                    .font(.system(size: 32, weight: .black, design: .rounded))
+                    .font(.system(size: 26, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
-                Text("UNTIL")
-                    .font(.system(size: 13, weight: .black, design: .rounded))
-                    .lineLimit(1)
-                Text(entry.holiday.name)
-                    .font(.system(size: 17, weight: .black, design: .rounded))
+                Text("UNTIL \(entry.holiday.name)")
+                    .font(.system(size: 15, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
-            Spacer()
+            Spacer(minLength: 0)
             Text(entry.todayString)
-                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .font(.system(size: 12, weight: .bold, design: .rounded))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text("MikeGyver Studio")
@@ -117,11 +126,13 @@ struct CountdownWidgetView: View {
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.6), radius: 3, x: 0, y: 2)
-        .padding(10)
+        .padding(8)
     }
 
     /// Medium: the v1.0.0 layout, unchanged except for the same
-    /// one-line + scale-factor guards so the subtitle cannot wrap.
+    /// one-line + scale-factor guards so the subtitle cannot wrap,
+    /// and the same containerBackground move as the small tile, so
+    /// the portrait photo cannot drive its height either.
     private var mediumView: some View {
         VStack(spacing: 2) {
             if entry.daysUntil == 0 {
@@ -141,7 +152,7 @@ struct CountdownWidgetView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
-            Spacer()
+            Spacer(minLength: 0)
             Text(entry.todayString)
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .lineLimit(1)

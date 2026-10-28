@@ -1,4 +1,4 @@
-# MG Holiday Countdown v1.0.3
+# MG Holiday Countdown v1.0.4
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,39 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.0.4 (CarPlay + phone small tile no longer clips)
+
+This supersedes v1.0.3, which was built but never pushed/installed —
+skip v1.0.3 and push this one instead. It includes everything in
+v1.0.3 (MG Holiday Countdown name, Christmas morph, fixed push
+script) plus the clipping fix below.
+
+The Oct 28 photos proved v1.0.1's small tile was broken on both
+surfaces, not just CarPlay: on CarPlay only "UNTIL HALLOWEEN"
+survived, and on the phone "3 DAYS" was cut in half at the top and
+"WED 10-28-2026" was cut in half at the bottom, with the credit gone
+entirely. The pattern is top and bottom cropped equally, middle
+surviving — the text was centred in a view taller than the tile.
+
+1. **Photo moved out of the content layout.** In v1.0.1 the portrait
+   photo lived in a ZStack with the text, so it could drive the
+   view's height beyond the tile. It now lives in
+   `containerBackground`, which the system sizes to the tile, and
+   the text VStack is sized to the tile on its own with an explicit
+   `frame(maxWidth: .infinity, maxHeight: .infinity)`.
+   `containerBackgroundRemovable(false)` is set explicitly, so
+   CarPlay/StandBy do not strip the photo.
+2. **Small layout made shorter.** The countdown is now two lines,
+   not three: "3 DAYS" (26pt) over "UNTIL HALLOWEEN" (15pt, one line,
+   shrinking instead of wrapping), instead of days / UNTIL / name on
+   three lines. Date is 12pt, credit 10pt, padding 8. Height budget:
+   ~79pt total, well under a small tile even after CarPlay's content
+   margins. The medium tile keeps its layout, but gets the same
+   containerBackground move, so the photo cannot drive its height
+   either.
+3. **Version/build bumped.** v1.0.4, build 5. TestFlight rejects a
+   re-upload of a duplicate version/build pair.
 
 ## What changed in v1.0.3 (shorter display name)
 
@@ -158,8 +191,8 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.3.zip`
-   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.3`.
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.4.zip`
+   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.4`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
 5. Actions tab → run the "Thanksgiving Countdown - Signed TestFlight"
@@ -197,6 +230,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.3, `CURRENT_PROJECT_VERSION` 4 in
+`MARKETING_VERSION` 1.0.4, `CURRENT_PROJECT_VERSION` 5 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.
