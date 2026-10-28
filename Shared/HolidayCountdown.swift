@@ -33,12 +33,18 @@ public enum HolidayCountdown {
         public let date: Date
         /// Asset-catalog image name for this holiday's background.
         public let backgroundImage: String
-        /// Downscaled copy for the widget only (768px wide, v1.0.1).
-        /// The widget extension is killed at roughly 30MB, and the
-        /// full 1152x2048 photo decodes to ~9.4MB on its own; the
-        /// widget copy decodes to ~4.2MB. The app keeps the full-res
-        /// image for its full-screen view.
-        public let widgetBackgroundImage: String
+        /// Widget copies only (v1.0.6). The full 1152x2048 photo
+        /// decodes to ~9.4MB and, scaledToFill into a square small
+        /// tile, crops the top/bottom — in the Oct 28 CarPlay photo
+        /// the pumpkins at the bottom were cut off. So the widget
+        /// does NOT use the portrait photo at all: Small gets a
+        /// 768x768 square and Medium a 1024x512 wide version, each
+        /// built by fitting the whole portrait (fit-height) over a
+        /// blurred, darkened copy of itself, so no subject is cropped
+        /// in either family. The app keeps the full-res portrait
+        /// for its full-screen view.
+        public let smallBackgroundImage: String
+        public let mediumBackgroundImage: String
     }
 
     public static func thanksgiving(year: Int) -> Date {
@@ -65,13 +71,16 @@ public enum HolidayCountdown {
         let candidates = [
             Holiday(name: "HALLOWEEN", shortName: "Halloween",
                     date: halloween(year: year), backgroundImage: "HalloweenBG",
-                    widgetBackgroundImage: "HalloweenBGWidget"),
+                    smallBackgroundImage: "HalloweenBGSmall",
+                    mediumBackgroundImage: "HalloweenBGMedium"),
             Holiday(name: "THANKSGIVING", shortName: "Thanksgiving",
                     date: thanksgiving(year: year), backgroundImage: "ThanksgivingBG",
-                    widgetBackgroundImage: "ThanksgivingBGWidget"),
+                    smallBackgroundImage: "ThanksgivingBGSmall",
+                    mediumBackgroundImage: "ThanksgivingBGMedium"),
             Holiday(name: "CHRISTMAS", shortName: "Christmas",
                     date: christmas(year: year), backgroundImage: "ChristmasBG",
-                    widgetBackgroundImage: "ChristmasBGWidget"),
+                    smallBackgroundImage: "ChristmasBGSmall",
+                    mediumBackgroundImage: "ChristmasBGMedium"),
         ]
         for holiday in candidates {
             let days = calendar.dateComponents([.day], from: day, to: holiday.date).day ?? 0
@@ -79,7 +88,8 @@ public enum HolidayCountdown {
         }
         let next = Holiday(name: "HALLOWEEN", shortName: "Halloween",
                            date: halloween(year: year + 1), backgroundImage: "HalloweenBG",
-                           widgetBackgroundImage: "HalloweenBGWidget")
+                           smallBackgroundImage: "HalloweenBGSmall",
+                           mediumBackgroundImage: "HalloweenBGMedium")
         let days = calendar.dateComponents([.day], from: day, to: next.date).day ?? 0
         return (next, days)
     }

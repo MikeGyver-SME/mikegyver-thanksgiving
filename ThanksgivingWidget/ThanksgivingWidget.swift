@@ -67,7 +67,15 @@ struct CountdownWidgetView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .containerBackground(for: .widget) {
             ZStack {
-                Image(entry.holiday.widgetBackgroundImage)
+                // v1.0.6: family-specific background, at the tile's
+                // own aspect ratio, so scaledToFill crops (almost)
+                // nothing. The old portrait photo cropped the
+                // pumpkins in the Oct 28 CarPlay photo, and would
+                // have done the same to Thanksgiving's candles/corn
+                // and Christmas's presents/star.
+                Image(family == .systemSmall
+                      ? entry.holiday.smallBackgroundImage
+                      : entry.holiday.mediumBackgroundImage)
                     .resizable()
                     .scaledToFill()
                 LinearGradient(

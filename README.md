@@ -1,4 +1,4 @@
-# MG Holiday Countdown v1.0.5
+# MG Holiday Countdown v1.0.6
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,30 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.0.6 (widget artwork no longer crops)
+
+The Oct 28 CarPlay photo proved the v1.0.5 text fix, but the
+pumpkins at the bottom were cut off — and the same would have
+happened to Thanksgiving and Christmas. Cause: the widget was still
+using the 768x1365 portrait photo, scaledToFill into a square small
+tile (and a wide medium tile), so the system cropped the top and
+bottom. The portrait is right for the app's full-screen view, wrong
+for a tile.
+
+Fix: the widget no longer uses the portrait photo at all. Each
+holiday now has a Small 768x768 square and a Medium 1024x512 wide
+background, at the tile's own aspect ratio, so scaledToFill crops
+(almost) nothing. Each one is built by fitting the whole portrait
+(fit-height) over a blurred, darkened copy of itself — so the moon,
+house, and all the pumpkins, the turkey, corn, and candles, and the
+star, tree, presents, and candy canes are all fully in frame, with
+blurred side fill that matches the art instead of black bars. The
+old portrait widget copies are retired. Verified with rendered
+mockups for the Nov 1 Thanksgiving tile and the Nov 27 Christmas
+tile before shipping.
+
+Version/build bumped: v1.0.6, build 7.
 
 ## What changed in v1.0.5 (one-line compile fix for v1.0.4)
 
@@ -206,8 +230,8 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.5.zip`
-   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.5`.
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.6.zip`
+   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.6`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
 5. Actions tab → run the "Thanksgiving Countdown - Signed TestFlight"
@@ -245,6 +269,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.5, `CURRENT_PROJECT_VERSION` 6 in
+`MARKETING_VERSION` 1.0.6, `CURRENT_PROJECT_VERSION` 7 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.
