@@ -54,8 +54,9 @@ struct CountdownWidgetView: View {
         // drive the content size. It now lives in containerBackground,
         // which the system sizes to the tile, and the text VStack is
         // sized to the tile on its own (frame maxWidth/maxHeight).
-        // containerBackgroundRemovable is explicitly false, so
-        // CarPlay/StandBy do not strip the photo.
+        // NOTE: containerBackgroundRemovable is NOT a View modifier —
+        // putting it here was the v1.0.4 compile error ("some View has
+        // no member"). It belongs on the WidgetConfiguration below.
         Group {
             if family == .systemSmall {
                 smallView
@@ -75,7 +76,6 @@ struct CountdownWidgetView: View {
                 )
             }
         }
-        .containerBackgroundRemovable(false)
         // On the iPhone, tapping the widget opens the app (via the
         // thanksgivingcountdown:// scheme registered in the app's
         // Info.plist). In CarPlay a tap cannot launch the app unless
@@ -182,6 +182,10 @@ struct ThanksgivingCountdownWidget: Widget {
         // in disfavoredLocations — listing it would group the widget
         // in Settings as "not optimized for CarPlay" and disable taps.
         .supportedFamilies([.systemSmall, .systemMedium])
+        // v1.0.5: this is a WidgetConfiguration modifier, iOS 17 — it
+        // must live here, not on the View. False means CarPlay/StandBy
+        // do not strip the photo background.
+        .containerBackgroundRemovable(false)
     }
 }
 

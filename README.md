@@ -1,4 +1,4 @@
-# MG Holiday Countdown v1.0.4
+# MG Holiday Countdown v1.0.5
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,21 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.0.5 (one-line compile fix for v1.0.4)
+
+v1.0.4 failed in GitHub Actions with `CompileSwift normal arm64 …
+ThanksgivingWidget.swift:78: error: value of type 'some View' has no
+member 'containerBackgroundRemovable'` — and nothing else failed.
+My mistake: `containerBackgroundRemovable` is a WidgetConfiguration
+modifier (iOS 17), not a View modifier. It was on the view; it now
+lives on the `StaticConfiguration` chain in
+`ThanksgivingCountdownWidget`, after `supportedFamilies`, where it
+belongs. The `containerBackground(for: .widget)` call on the view
+itself was correct and is unchanged, as is the whole v1.0.4 clipping
+fix (photo in containerBackground, 2-line small layout, ~79pt budget).
+v1.0.4 never reached TestFlight, but it was already pushed and tagged,
+so this is a new version/build rather than a re-tag: v1.0.5, build 6.
 
 ## What changed in v1.0.4 (CarPlay + phone small tile no longer clips)
 
@@ -191,8 +206,8 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.4.zip`
-   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.4`.
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.5.zip`
+   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.5`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
 5. Actions tab → run the "Thanksgiving Countdown - Signed TestFlight"
@@ -230,6 +245,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.4, `CURRENT_PROJECT_VERSION` 5 in
+`MARKETING_VERSION` 1.0.5, `CURRENT_PROJECT_VERSION` 6 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.
