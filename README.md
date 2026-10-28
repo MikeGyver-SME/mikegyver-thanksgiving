@@ -1,4 +1,4 @@
-# MikeGyver Holiday Countdown v1.0.2
+# MG Holiday Countdown v1.0.3
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,26 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.0.3 (shorter display name)
+
+Only the user-visible name changed — no code, artwork, or behavior
+differences from v1.0.2:
+
+1. **Display name shortened to MG Holiday Countdown.** The widget
+   gallery name, both Info.plist display names (app icon label and
+   extension), and the README now use the short form, so it fits
+   better under the icon. Bundle IDs, the GitHub repo, and the
+   TestFlight workflow name are unchanged. (v1.0.2 was tagged but
+   never built for TestFlight, so MG is the first name testers
+   will see.)
+2. **Push script retry fixed.** The old try/catch around `git push`
+   never fired in Windows PowerShell (a failing native command does
+   not throw there), which silently left main on v1.0.1 while the
+   v1.0.2 tag pushed. The script now checks `$LASTEXITCODE`
+   explicitly after every push and stops with an error instead of
+   tagging when main was not updated.
+3. **Version/build bumped.** v1.0.3, build 4.
 
 ## What changed in v1.0.2 (Christmas morph + new name)
 
@@ -18,11 +38,14 @@ Christmas, then next year's Halloween.
    just a third entry in the shared holiday list, so the count, the
    date line, and the artwork all flip together at midnight
    America/Chicago, exactly like the Halloween → Thanksgiving flip.
-2. **New display name: MikeGyver Holiday Countdown.** The widget
-   gallery name and the README now say so, since the app is no longer
+2. **New display name: MG Holiday Countdown.** The widget
+   gallery name, the app icon label (both Info.plist display names),
+   and the README now say so, since the app is no longer
    Thanksgiving-only. Bundle IDs (`studio.mikegyver.thanksgiving` /
    `.widget`), the GitHub repo, and the TestFlight workflow name are
-   unchanged, so this is the same app record, not a new app.
+   unchanged, so this is the same app record, not a new app. The
+   App Store Connect listing name can be edited there directly, with
+   no rebuild, if the record already exists under the old name.
 3. **Christmas artwork in both sizes.** Full-res `ChristmasBG`
    (1152x2048 PNG) for the app's full-screen view, and a 768px-wide
    JPEG `ChristmasBGWidget` for the widget, keeping the extension
@@ -135,17 +158,17 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.2.zip`
-   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.2`.
-   If you already pushed v1.0.1, this overlays the new files in the
-   same repo folder and tags the new version — do not re-tag v1.0.1.
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.3.zip`
+   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.3`.
+   If you already pushed v1.0.2, this overlays the new files in the
+   same repo folder and tags the new version — do not re-tag v1.0.2.
 5. Actions tab → run the "Thanksgiving Countdown - Signed TestFlight"
    workflow **by hand** (workflow_dispatch — pushing a tag does not
    start it). When it goes green, install from TestFlight, then answer
    the export-compliance questionnaire: no encryption beyond the
    standard iOS kind, so the answer that clears Missing Compliance is
    the "none of the algorithms" option.
-6. Long-press the Home Screen → + → Thanksgiving Countdown → pick
+6. Long-press the Home Screen → + → MG Holiday Countdown → pick
    Small or Medium. After an update, remove the widget and add it back
    before judging it — a fixed build can still show stale behavior
    until the widget is re-added.
@@ -159,7 +182,7 @@ driving.
 
 1. iPhone → **Settings → General → CarPlay → your car → Widgets**.
 2. Turn on **Show Widgets** if it is off, tap **Add Widgets**, and
-   pick **Thanksgiving Countdown** (Small).
+   pick **MG Holiday Countdown** (Small).
 3. Reconnect CarPlay (unplug/replug, or toggle wireless off and on).
    The tile appears in the dashboard widget stack, to the left of the
    dashboard.
@@ -174,6 +197,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.2, `CURRENT_PROJECT_VERSION` 3 in
+`MARKETING_VERSION` 1.0.3, `CURRENT_PROJECT_VERSION` 4 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.

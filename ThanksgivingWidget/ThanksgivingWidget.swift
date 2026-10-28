@@ -163,7 +163,7 @@ struct ThanksgivingCountdownWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             CountdownWidgetView(entry: entry)
         }
-        .configurationDisplayName("MikeGyver Holiday Countdown")
+        .configurationDisplayName("MG Holiday Countdown")
         .description("Days until the next holiday, with today's date. Flips at midnight Central.")
         // systemSmall is the family CarPlay shows (iOS 26+); systemMedium
         // stays Home-Screen-only by Apple's design, not by this list.
