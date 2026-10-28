@@ -45,6 +45,11 @@ public enum HolidayCountdown {
         /// for its full-screen view.
         public let smallBackgroundImage: String
         public let mediumBackgroundImage: String
+        /// True when the artwork already has "MikeGyver Studio" baked
+        /// in at the bottom (v1.0.7: Mike's own Thanksgiving/Christmas
+        /// square images). The widget/app must NOT overlay a second
+        /// credit, and the date must sit above the baked credit.
+        public let bakedCredit: Bool
     }
 
     public static func thanksgiving(year: Int) -> Date {
@@ -72,15 +77,18 @@ public enum HolidayCountdown {
             Holiday(name: "HALLOWEEN", shortName: "Halloween",
                     date: halloween(year: year), backgroundImage: "HalloweenBG",
                     smallBackgroundImage: "HalloweenBGSmall",
-                    mediumBackgroundImage: "HalloweenBGMedium"),
+                    mediumBackgroundImage: "HalloweenBGMedium",
+                    bakedCredit: false),
             Holiday(name: "THANKSGIVING", shortName: "Thanksgiving",
-                    date: thanksgiving(year: year), backgroundImage: "ThanksgivingBG",
+                    date: thanksgiving(year: year), backgroundImage: "ThanksgivingBGPortrait",
                     smallBackgroundImage: "ThanksgivingBGSmall",
-                    mediumBackgroundImage: "ThanksgivingBGMedium"),
+                    mediumBackgroundImage: "ThanksgivingBGMedium",
+                    bakedCredit: true),
             Holiday(name: "CHRISTMAS", shortName: "Christmas",
-                    date: christmas(year: year), backgroundImage: "ChristmasBG",
+                    date: christmas(year: year), backgroundImage: "ChristmasBGPortrait",
                     smallBackgroundImage: "ChristmasBGSmall",
-                    mediumBackgroundImage: "ChristmasBGMedium"),
+                    mediumBackgroundImage: "ChristmasBGMedium",
+                    bakedCredit: true),
         ]
         for holiday in candidates {
             let days = calendar.dateComponents([.day], from: day, to: holiday.date).day ?? 0
@@ -89,7 +97,8 @@ public enum HolidayCountdown {
         let next = Holiday(name: "HALLOWEEN", shortName: "Halloween",
                            date: halloween(year: year + 1), backgroundImage: "HalloweenBG",
                            smallBackgroundImage: "HalloweenBGSmall",
-                           mediumBackgroundImage: "HalloweenBGMedium")
+                           mediumBackgroundImage: "HalloweenBGMedium",
+                           bakedCredit: false)
         let days = calendar.dateComponents([.day], from: day, to: next.date).day ?? 0
         return (next, days)
     }

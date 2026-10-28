@@ -102,39 +102,54 @@ struct CountdownWidgetView: View {
     /// cannot be pushed off the bottom again. Every line is still
     /// lineLimit(1) + minimumScaleFactor, so a long name shrinks
     /// instead of wrapping.
+    /// Small = the Home Screen small tile AND the CarPlay tile.
+    /// v1.0.7 overlay, per Mike: smaller than v1.0.4-1.0.6, so the
+    /// artwork dominates like the original tile — days 20 (was 26),
+    /// until-name 13 (was 15), date 10 (was 12), credit 10 only when
+    /// the artwork does NOT already have it baked in. For baked
+    /// holidays (Thanksgiving/Christmas, Mike's own square images)
+    /// the credit Text is omitted entirely, and bottom padding is
+    /// 30 instead of 8, so the 10pt date sits above the baked
+    /// "MikeGyver Studio" at the bottom of the image instead of
+    /// colliding with it. Every line is still lineLimit(1) +
+    /// minimumScaleFactor, so a long name shrinks instead of wrapping.
     private var smallView: some View {
         VStack(spacing: 0) {
             if entry.daysUntil == 0 {
                 Text("HAPPY")
-                    .font(.system(size: 26, weight: .black, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text(entry.holiday.name)
-                    .font(.system(size: 16, weight: .black, design: .rounded))
+                    .font(.system(size: 14, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             } else {
                 Text("\(entry.daysUntil) DAYS")
-                    .font(.system(size: 26, weight: .black, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                 Text("UNTIL \(entry.holiday.name)")
-                    .font(.system(size: 15, weight: .black, design: .rounded))
+                    .font(.system(size: 13, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
             Spacer(minLength: 0)
             Text(entry.todayString)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(size: 10, weight: .bold, design: .rounded))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-            Text("MikeGyver Studio")
-                .font(.system(size: 10, weight: .semibold, design: .rounded))
-                .lineLimit(1)
-                .opacity(0.9)
+            if !entry.holiday.bakedCredit {
+                Text("MikeGyver Studio")
+                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .lineLimit(1)
+                    .opacity(0.9)
+            }
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.6), radius: 3, x: 0, y: 2)
-        .padding(8)
+        .padding(.horizontal, 8)
+        .padding(.top, 8)
+        .padding(.bottom, entry.holiday.bakedCredit ? 30 : 8)
     }
 
     /// Medium: the v1.0.0 layout, unchanged except for the same
@@ -145,33 +160,37 @@ struct CountdownWidgetView: View {
         VStack(spacing: 2) {
             if entry.daysUntil == 0 {
                 Text("HAPPY")
-                    .font(.system(size: 34, weight: .black, design: .rounded))
+                    .font(.system(size: 28, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text(entry.holiday.name)
-                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             } else {
                 Text("\(entry.daysUntil) DAYS")
-                    .font(.system(size: 34, weight: .black, design: .rounded))
+                    .font(.system(size: 28, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text("UNTIL \(entry.holiday.name)")
-                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .font(.system(size: 15, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
             Spacer(minLength: 0)
             Text(entry.todayString)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(.system(size: 12, weight: .bold, design: .rounded))
                 .lineLimit(1)
-            Text("MikeGyver Studio")
-                .font(.system(size: 12, weight: .semibold, design: .rounded))
-                .lineLimit(1)
-                .opacity(0.9)
+            if !entry.holiday.bakedCredit {
+                Text("MikeGyver Studio")
+                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .lineLimit(1)
+                    .opacity(0.9)
+            }
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.6), radius: 3, x: 0, y: 2)
-        .padding(12)
+        .padding(.horizontal, 12)
+        .padding(.top, 12)
+        .padding(.bottom, entry.holiday.bakedCredit ? 32 : 12)
     }
 }
 

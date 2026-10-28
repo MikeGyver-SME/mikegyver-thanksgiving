@@ -37,9 +37,14 @@ struct ContentView: View {
                 Spacer()
                 Text(HolidayCountdown.tileDateString(for: today))
                     .font(.system(size: 24, weight: .bold, design: .rounded))
-                Text("MikeGyver Studio")
-                    .font(.system(size: 18, weight: .semibold, design: .rounded))
-                    .opacity(0.9)
+                // v1.0.7: Thanksgiving/Christmas artwork already has
+                // "MikeGyver Studio" baked in — do not overlay a second
+                // credit. Halloween has no baked credit, so keep it.
+                if !holiday.bakedCredit {
+                    Text("MikeGyver Studio")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .opacity(0.9)
+                }
                 Text(daysUntil == 0
                      ? HolidayCountdown.longDateString(for: today)
                      : "\(holiday.shortName) · \(HolidayCountdown.longDateString(for: holiday.date))")
