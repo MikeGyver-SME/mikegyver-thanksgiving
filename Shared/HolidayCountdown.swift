@@ -1,6 +1,6 @@
 import Foundation
 
-/// Shared countdown logic for the Thanksgiving Countdown app + widget.
+/// Shared countdown logic for the MG Holiday Countdown app + widget.
 ///
 /// Rules Mike asked for:
 /// - The countdown runs in America/Chicago and flips at midnight Central.
@@ -8,12 +8,19 @@ import Foundation
 ///   Nov 1 entry is 25 hours long. Calendar.startOfDay in the Chicago
 ///   time zone handles that; nothing here assumes 24-hour days.)
 /// - Thanksgiving is the 4th Thursday of November (2026: Nov 26).
-/// - From Nov 1 the tile counts to Thanksgiving. Before Nov 1 it counts
-///   to Halloween (Oct 31), so the widget is sensible the week it is
-///   installed; on a holiday itself it reads HAPPY <HOLIDAY>.
-/// - After Thanksgiving it morphs to a Christmas countdown (Dec 25),
-///   with Christmas artwork; after Christmas it rolls to next year's
-///   Halloween, so the tile never goes stale.
+/// - On an event itself the tile reads HAPPY <EVENT>.
+/// - v1.0.9: the tile is no longer holidays-only. It cycles through
+///   the whole year in chronological order: Colin's Birthday (Feb 7),
+///   Shaira's Birthday (Feb 23), Independence Day (Jul 4), Clark's
+///   Birthday (Jul 12), Halloween (Oct 31), Thanksgiving (4th Thu
+///   Nov), Michael's Birthday (Dec 5), Christmas (Dec 25), then back
+///   to Colin's Birthday next year. So after Thanksgiving it counts
+///   to Michael's Birthday, not straight to Christmas, and after
+///   Christmas it counts to Colin's Birthday, not to next Halloween.
+///   Every event's artwork is Mike's own square image with
+///   "MikeGyver Studio" baked in at the bottom, so the widget/app
+///   never overlay a second credit, and the date sits above the
+///   baked credit (bottom padding 30 small / 32 medium).
 public enum HolidayCountdown {
 
     public static let chicago = TimeZone(identifier: "America/Chicago")!
@@ -26,29 +33,24 @@ public enum HolidayCountdown {
 
     public struct Holiday {
         /// Uppercase label for the tile, e.g. "THANKSGIVING".
+        /// Birthday names are long ("MICHAEL'S BIRTHDAY", 18 chars):
+        /// the small tile's until-name line is lineLimit(1) +
+        /// minimumScaleFactor(0.6), so it shrinks to fit instead of
+        /// wrapping or clipping.
         public let name: String
-        /// Title-case label, e.g. "Thanksgiving".
+        /// Title-case label, e.g. "Thanksgiving", "Michael's Birthday".
         public let shortName: String
         /// Start of day in America/Chicago.
         public let date: Date
-        /// Asset-catalog image name for this holiday's background.
+        /// Asset-catalog image name for the app's full-screen view.
         public let backgroundImage: String
-        /// Widget copies only (v1.0.6). The full 1152x2048 photo
-        /// decodes to ~9.4MB and, scaledToFill into a square small
-        /// tile, crops the top/bottom — in the Oct 28 CarPlay photo
-        /// the pumpkins at the bottom were cut off. So the widget
-        /// does NOT use the portrait photo at all: Small gets a
-        /// 768x768 square and Medium a 1024x512 wide version, each
-        /// built by fitting the whole portrait (fit-height) over a
-        /// blurred, darkened copy of itself, so no subject is cropped
-        /// in either family. The app keeps the full-res portrait
-        /// for its full-screen view.
+        /// Widget copies: Small is the 768x768 square direct (no crop,
+        /// no blur bars); Medium is a 1024x512 blurred-fit version of
+        /// the same square, so the full square is visible there too.
         public let smallBackgroundImage: String
         public let mediumBackgroundImage: String
         /// True when the artwork already has "MikeGyver Studio" baked
-        /// in at the bottom (v1.0.7: Mike's own Thanksgiving/Christmas
-        /// square images). The widget/app must NOT overlay a second
-        /// credit, and the date must sit above the baked credit.
+        /// in at the bottom. True for every event as of v1.0.9.
         public let bakedCredit: Bool
     }
 
@@ -60,22 +62,44 @@ public enum HolidayCountdown {
         return calendar.date(byAdding: .day, value: daysToFirstThursday + 21, to: nov1)!
     }
 
-    public static func halloween(year: Int) -> Date {
-        calendar.date(from: DateComponents(year: year, month: 10, day: 31))!
+    private static func fixedDate(year: Int, month: Int, day: Int) -> Date {
+        calendar.date(from: DateComponents(year: year, month: month, day: day))!
     }
 
-    public static func christmas(year: Int) -> Date {
-        calendar.date(from: DateComponents(year: year, month: 12, day: 25))!
-    }
-
-    /// The holiday the countdown points at for a given day (which must
-    /// already be start-of-day in Chicago), plus whole days until it.
-    /// daysUntil == 0 means today IS the holiday.
-    public static func currentHoliday(on day: Date) -> (holiday: Holiday, daysUntil: Int) {
-        let year = calendar.component(.year, from: day)
-        let candidates = [
+    /// All events for one calendar year, in chronological order.
+    /// Image mapping, verified against Mike's Oct 28, 2026 uploads:
+    /// Michael = winter guitar/telescope, Clark = summer lake,
+    /// Colin = winter rockets/robot, Independence = fireworks/flags,
+    /// Shaira = pink roses with the woman in the centre.
+    private static func events(year: Int) -> [Holiday] {
+        [
+            Holiday(name: "COLIN'S BIRTHDAY", shortName: "Colin's Birthday",
+                    date: fixedDate(year: year, month: 2, day: 7),
+                    backgroundImage: "ColinBirthdayBGPortrait",
+                    smallBackgroundImage: "ColinBirthdayBGSmall",
+                    mediumBackgroundImage: "ColinBirthdayBGMedium",
+                    bakedCredit: true),
+            Holiday(name: "SHAIRA'S BIRTHDAY", shortName: "Shaira's Birthday",
+                    date: fixedDate(year: year, month: 2, day: 23),
+                    backgroundImage: "ShairaBirthdayBGPortrait",
+                    smallBackgroundImage: "ShairaBirthdayBGSmall",
+                    mediumBackgroundImage: "ShairaBirthdayBGMedium",
+                    bakedCredit: true),
+            Holiday(name: "INDEPENDENCE DAY", shortName: "Independence Day",
+                    date: fixedDate(year: year, month: 7, day: 4),
+                    backgroundImage: "IndependenceDayBGPortrait",
+                    smallBackgroundImage: "IndependenceDayBGSmall",
+                    mediumBackgroundImage: "IndependenceDayBGMedium",
+                    bakedCredit: true),
+            Holiday(name: "CLARK'S BIRTHDAY", shortName: "Clark's Birthday",
+                    date: fixedDate(year: year, month: 7, day: 12),
+                    backgroundImage: "ClarkBirthdayBGPortrait",
+                    smallBackgroundImage: "ClarkBirthdayBGSmall",
+                    mediumBackgroundImage: "ClarkBirthdayBGMedium",
+                    bakedCredit: true),
             Holiday(name: "HALLOWEEN", shortName: "Halloween",
-                    date: halloween(year: year), backgroundImage: "HalloweenBGPortrait",
+                    date: fixedDate(year: year, month: 10, day: 31),
+                    backgroundImage: "HalloweenBGPortrait",
                     smallBackgroundImage: "HalloweenBGSmall",
                     mediumBackgroundImage: "HalloweenBGMedium",
                     bakedCredit: true),
@@ -84,23 +108,39 @@ public enum HolidayCountdown {
                     smallBackgroundImage: "ThanksgivingBGSmall",
                     mediumBackgroundImage: "ThanksgivingBGMedium",
                     bakedCredit: true),
+            Holiday(name: "MICHAEL'S BIRTHDAY", shortName: "Michael's Birthday",
+                    date: fixedDate(year: year, month: 12, day: 5),
+                    backgroundImage: "MichaelBirthdayBGPortrait",
+                    smallBackgroundImage: "MichaelBirthdayBGSmall",
+                    mediumBackgroundImage: "MichaelBirthdayBGMedium",
+                    bakedCredit: true),
             Holiday(name: "CHRISTMAS", shortName: "Christmas",
-                    date: christmas(year: year), backgroundImage: "ChristmasBGPortrait",
+                    date: fixedDate(year: year, month: 12, day: 25),
+                    backgroundImage: "ChristmasBGPortrait",
                     smallBackgroundImage: "ChristmasBGSmall",
                     mediumBackgroundImage: "ChristmasBGMedium",
                     bakedCredit: true),
         ]
+    }
+
+    /// The event the countdown points at for a given day (which must
+    /// already be start-of-day in Chicago), plus whole days until it.
+    /// daysUntil == 0 means today IS the event.
+    /// Searches this year and next year, sorted by date, so the
+    /// rollover after Christmas lands on Colin's Birthday (Feb 7),
+    /// not on next Halloween.
+    public static func currentHoliday(on day: Date) -> (holiday: Holiday, daysUntil: Int) {
+        let year = calendar.component(.year, from: day)
+        let candidates = (events(year: year) + events(year: year + 1))
+            .sorted { $0.date < $1.date }
         for holiday in candidates {
             let days = calendar.dateComponents([.day], from: day, to: holiday.date).day ?? 0
             if days >= 0 { return (holiday, days) }
         }
-        let next = Holiday(name: "HALLOWEEN", shortName: "Halloween",
-                           date: halloween(year: year + 1), backgroundImage: "HalloweenBGPortrait",
-                           smallBackgroundImage: "HalloweenBGSmall",
-                           mediumBackgroundImage: "HalloweenBGMedium",
-                           bakedCredit: true)
-        let days = calendar.dateComponents([.day], from: day, to: next.date).day ?? 0
-        return (next, days)
+        // Unreachable: next year's Christmas is always in candidates.
+        let fallback = events(year: year + 1).last!
+        let days = calendar.dateComponents([.day], from: day, to: fallback.date).day ?? 0
+        return (fallback, days)
     }
 
     public static func startOfToday() -> Date {

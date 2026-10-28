@@ -1,4 +1,4 @@
-# MG Holiday Countdown v1.0.8
+# MG Holiday Countdown v1.0.9
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,36 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.0.9 (five more events, all year round)
+
+The tile is no longer holidays-only. It now cycles through the
+whole year in chronological order, with Mike's own square images
+for each new event, all with "MikeGyver Studio" baked in, so no
+overlay credit is ever added:
+
+1. Colin's Birthday — Feb 7 (winter rockets/robot image)
+2. Shaira's Birthday — Feb 23 (pink roses image)
+3. Independence Day — Jul 4 (fireworks/flags image)
+4. Clark's Birthday — Jul 12 (summer lake image)
+5. Michael's Birthday — Dec 5 (winter guitar/telescope image)
+
+Full cycle, verified by simulation: Halloween Oct 31 ->
+Thanksgiving (4th Thu Nov) -> Michael's Birthday Dec 5 ->
+Christmas Dec 25 -> Colin's Birthday Feb 7 -> Shaira's Birthday
+Feb 23 -> Independence Day Jul 4 -> Clark's Birthday Jul 12 ->
+Halloween again. So after Thanksgiving the tile counts to
+Michael's Birthday, not straight to Christmas, and after
+Christmas it counts to Colin's Birthday, not to next Halloween.
+On the day itself the tile reads HAPPY <EVENT>, e.g. HAPPY
+MICHAEL'S BIRTHDAY. Birthday names are long, so the small tile's
+until-name line shrinks (minimumScaleFactor) to fit — "UNTIL
+MICHAEL'S BIRTHDAY" renders at about 9pt effective, still readable,
+instead of wrapping or clipping. Each new event has Small 768x768
+direct, Medium 1024x512 blurred-fit, and app portrait 1152x2048
+blurred-fit backgrounds, same as the holidays.
+
+Version/build bumped: v1.0.9, build 10.
 
 ## What changed in v1.0.8 (Halloween joins the square set)
 
@@ -279,8 +309,8 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.8.zip`
-   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.8`.
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.9.zip`
+   in `E:\Downloads`, and run the script. It pushes and tags `v1.0.9`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
 5. Actions tab → run the "Thanksgiving Countdown - Signed TestFlight"
@@ -318,6 +348,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.8, `CURRENT_PROJECT_VERSION` 9 in
+`MARKETING_VERSION` 1.0.9, `CURRENT_PROJECT_VERSION` 10 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.
