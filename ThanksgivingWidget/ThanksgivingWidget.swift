@@ -117,30 +117,30 @@ struct CountdownWidgetView: View {
         VStack(spacing: 0) {
             if entry.daysUntil == 0 {
                 Text("HAPPY")
-                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .font(.system(size: 14, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text(entry.holiday.name)
-                    .font(.system(size: 14, weight: .black, design: .rounded))
+                    .font(.system(size: 10, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             } else {
                 Text("\(entry.daysUntil) DAYS")
-                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .font(.system(size: 14, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                 Text("UNTIL \(entry.holiday.name)")
-                    .font(.system(size: 13, weight: .black, design: .rounded))
+                    .font(.system(size: 10, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
             Spacer(minLength: 0)
             Text(entry.todayString)
-                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .font(.system(size: 8, weight: .bold, design: .rounded))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             if !entry.holiday.bakedCredit {
                 Text("MikeGyver Studio")
-                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .font(.system(size: 8, weight: .semibold, design: .rounded))
                     .lineLimit(1)
                     .opacity(0.9)
             }
@@ -160,28 +160,28 @@ struct CountdownWidgetView: View {
         VStack(spacing: 2) {
             if entry.daysUntil == 0 {
                 Text("HAPPY")
-                    .font(.system(size: 28, weight: .black, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text(entry.holiday.name)
-                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .font(.system(size: 14, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             } else {
                 Text("\(entry.daysUntil) DAYS")
-                    .font(.system(size: 28, weight: .black, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .lineLimit(1)
                 Text("UNTIL \(entry.holiday.name)")
-                    .font(.system(size: 15, weight: .black, design: .rounded))
+                    .font(.system(size: 12, weight: .black, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
             Spacer(minLength: 0)
             Text(entry.todayString)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(size: 10, weight: .bold, design: .rounded))
                 .lineLimit(1)
             if !entry.holiday.bakedCredit {
                 Text("MikeGyver Studio")
-                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .font(.system(size: 8, weight: .semibold, design: .rounded))
                     .lineLimit(1)
                     .opacity(0.9)
             }

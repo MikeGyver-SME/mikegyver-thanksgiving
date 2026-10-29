@@ -1,4 +1,4 @@
-# MG Holiday Countdown v1.0.9
+# MG Holiday Countdown v1.1.0
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
@@ -6,6 +6,10 @@ today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
 through the holidays on its own: Halloween, then Thanksgiving, then
 Christmas, then next year's Halloween.
+
+## What changed in v1.1.0 (smaller widget fonts)
+
+Widget overlay shrunk so the artwork shows more: Small (phone + CarPlay) days/HAPPY 20 -> 14, until-name 13 -> 10, date 10 -> 8, happy-name 14 -> 10, credit 10 -> 8. Medium scaled the same way: days 28 -> 20, until-name 15 -> 12, date 12 -> 10. App full-screen unchanged. Includes everything from v1.0.9 (8 events all year), so push this zip instead of the v1.0.9 zip.
 
 ## What changed in v1.0.9 (five more events, all year round)
 
@@ -35,7 +39,7 @@ instead of wrapping or clipping. Each new event has Small 768x768
 direct, Medium 1024x512 blurred-fit, and app portrait 1152x2048
 blurred-fit backgrounds, same as the holidays.
 
-Version/build bumped: v1.0.9, build 10.
+Version/build bumped: v1.1.0, build 11 (was v1.0.9, build 10).
 
 ## What changed in v1.0.8 (Halloween joins the square set)
 
@@ -309,7 +313,7 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.0.9.zip`
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.1.0.zip`
    in `E:\Downloads`, and run the script. It pushes and tags `v1.0.9`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
@@ -348,6 +352,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.0.9, `CURRENT_PROJECT_VERSION` 10 in
+`MARKETING_VERSION` 1.1.0, `CURRENT_PROJECT_VERSION` 11 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.
