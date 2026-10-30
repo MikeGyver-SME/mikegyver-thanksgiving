@@ -1,11 +1,18 @@
-# MG Holiday Countdown v1.1.0
+# MG Holiday Countdown v1.1.1
 
 An iOS app + WidgetKit extension in the style of Mike's Halloween tile:
 a big **"N DAYS UNTIL <HOLIDAY>"** count over holiday artwork, with
 today's weekday + date underneath and a MikeGyver Studio credit — the
 same layout as the Halloween tile on his car display. The tile morphs
-through the holidays on its own: Halloween, then Thanksgiving, then
-Christmas, then next year's Halloween.
+through the whole year on its own: New Year's Day, birthdays,
+Independence Day, Halloween, Thanksgiving, Christmas, then back
+to New Year's Day.
+
+## What changed in v1.1.1 (New Year's Day — supersedes v1.1.0)
+
+v1.1.0 (build 11) was already pushed to GitHub main/tag before the New Year's Day amendment, so reusing v1.1.0 would need a force-moved tag and risks a TestFlight duplicate version/build rejection. v1.1.1 (build 12) is the clean bump: push this zip instead of v1.1.0, and do NOT run the TestFlight workflow from the v1.1.0 tag.
+
+**New Year's Day — Jan 1** added as the 9th event, using Mike's uploaded snowy-cottage/fireworks image (Small 768x768 direct, Medium 1024x512 blurred-fit, portrait 1152x2048 blurred-fit, "MikeGyver Studio" baked in, so no overlay credit). Full cycle is now: New Year's Day Jan 1 -> Colin's Birthday Feb 7 -> Shaira's Birthday Feb 23 -> Independence Day Jul 4 -> Clark's Birthday Jul 12 -> Halloween Oct 31 -> Thanksgiving (4th Thu Nov) -> Michael's Birthday Dec 5 -> Christmas Dec 25 -> New Year's Day again. Verified by simulation: Dec 26 counts 6 days to New Year's Day, Jan 1 reads HAPPY NEW YEAR'S DAY, Jan 2 counts 36 days to Colin's Birthday.
 
 ## What changed in v1.1.0 (smaller widget fonts)
 
@@ -313,7 +320,7 @@ this machine — everything runs on the GitHub macOS runner.
    same four secrets Launch Window / BusLink use: `ASC_KEY_ID`,
    `ASC_ISSUER_ID`, `ASC_KEY_P8`, `TEAM_ID`.
 4. Create the empty repo `MikeGyver-SME/mikegyver-thanksgiving`,
-   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.1.0.zip`
+   save `push-thanksgiving.ps1` and `thanksgiving-countdown-v1.1.1.zip`
    in `E:\Downloads`, and run the script. It pushes and tags `v1.0.9`.
    If you already pushed v1.0.2, this overlays the new files in the
    same repo folder and tags the new version — do not re-tag v1.0.2.
@@ -352,6 +359,6 @@ driving.
 
 ## 5. Versioning
 
-`MARKETING_VERSION` 1.1.0, `CURRENT_PROJECT_VERSION` 11 in
+`MARKETING_VERSION` 1.1.1, `CURRENT_PROJECT_VERSION` 12 in
 `project.yml`. For the next release, bump `CURRENT_PROJECT_VERSION`
 before re-tagging — TestFlight rejects a duplicate version/build pair.

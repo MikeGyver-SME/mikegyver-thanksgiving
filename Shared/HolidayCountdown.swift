@@ -13,10 +13,12 @@ import Foundation
 ///   the whole year in chronological order: Colin's Birthday (Feb 7),
 ///   Shaira's Birthday (Feb 23), Independence Day (Jul 4), Clark's
 ///   Birthday (Jul 12), Halloween (Oct 31), Thanksgiving (4th Thu
-///   Nov), Michael's Birthday (Dec 5), Christmas (Dec 25), then back
-///   to Colin's Birthday next year. So after Thanksgiving it counts
-///   to Michael's Birthday, not straight to Christmas, and after
-///   Christmas it counts to Colin's Birthday, not to next Halloween.
+///   Nov), Michael's Birthday (Dec 5), Christmas (Dec 25), New Year's
+///   Day (Jan 1, added Oct 29, 2026 from Mike's uploaded image),
+///   then back to Colin's Birthday next year. So after Thanksgiving
+///   it counts to Michael's Birthday, not straight to Christmas,
+///   after Christmas it counts to New Year's Day, not to Colin's
+///   Birthday, and after New Year's Day it counts to Colin's.
 ///   Every event's artwork is Mike's own square image with
 ///   "MikeGyver Studio" baked in at the bottom, so the widget/app
 ///   never overlay a second credit, and the date sits above the
@@ -71,8 +73,16 @@ public enum HolidayCountdown {
     /// Michael = winter guitar/telescope, Clark = summer lake,
     /// Colin = winter rockets/robot, Independence = fireworks/flags,
     /// Shaira = pink roses with the woman in the centre.
+    /// New Year's Day (Oct 29, 2026 upload) = snowy cottage, fireworks,
+    /// family walking up the path, "MikeGyver Studio" baked in.
     private static func events(year: Int) -> [Holiday] {
         [
+            Holiday(name: "NEW YEAR'S DAY", shortName: "New Year's Day",
+                    date: fixedDate(year: year, month: 1, day: 1),
+                    backgroundImage: "NewYearsDayBGPortrait",
+                    smallBackgroundImage: "NewYearsDayBGSmall",
+                    mediumBackgroundImage: "NewYearsDayBGMedium",
+                    bakedCredit: true),
             Holiday(name: "COLIN'S BIRTHDAY", shortName: "Colin's Birthday",
                     date: fixedDate(year: year, month: 2, day: 7),
                     backgroundImage: "ColinBirthdayBGPortrait",
@@ -127,7 +137,8 @@ public enum HolidayCountdown {
     /// already be start-of-day in Chicago), plus whole days until it.
     /// daysUntil == 0 means today IS the event.
     /// Searches this year and next year, sorted by date, so the
-    /// rollover after Christmas lands on Colin's Birthday (Feb 7),
+    /// rollover after Christmas lands on New Year's Day (Jan 1),
+    /// and after New Year's Day on Colin's Birthday (Feb 7),
     /// not on next Halloween.
     public static func currentHoliday(on day: Date) -> (holiday: Holiday, daysUntil: Int) {
         let year = calendar.component(.year, from: day)
